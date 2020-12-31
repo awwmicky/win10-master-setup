@@ -3,19 +3,22 @@
 ###
 
 $Tweaks = @(
-#    "ShowAllList",
+#    "ShowAllList"
 #    "ShowCustomList"
 #    "ShowSoftwareList"
 #    "ShowMicrosoftStoreList"
 #    "ShowWindowsList"
 
-    "UninstallMsftBloat",
-    "UninstallThirdPartyBloat",
-    "DebloatWindowsApps"
-    
     #"DisableOneDrive"
     #"DisableCortana"
     #"DisableMsftEdge"
+
+    # "UninstallMsftBloat"
+    # "UninstallThirdPartyBloat"
+    # "DebloatWindowsApps"
+
+    "InstallApp_1"
+    # "UninstallApp_1"
 )
 
 ###
@@ -36,7 +39,7 @@ Function ShowAllList {
 #    Get-AppxPackage -PackageTypeFilter Main | ? { $_.SignatureKind -eq "System" } | Sort Name | Format-Table Name, InstallLocation
 
 #    Write-Host "Showing List of Running Apps List..."
-#    Get-Process | Where-Object { $_.MainWindowTitle } | Format-Table ID, Name, Mainwindowtitle –AutoSize
+#    Get-Process | Where-Object { $_.MainWindowTitle } | Format-Table ID, Name, Mainwindowtitle ï¿½AutoSize
 }
 
 Function ShowCustomList {
@@ -47,12 +50,12 @@ Function ShowCustomList {
     Get-ItemProperty "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*" | 
         Where-Object {$_.DisplayName -ne $null -and $_.SystemComponent -ne "1"} |
             Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | 
-                Format-Table –AutoSize
+                Format-Table ï¿½AutoSize
 
     Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | 
         Where-Object {$_.DisplayName -ne $null -and $_.SystemComponent -ne "1"} |
             Select-Object DisplayName, DisplayVersion, Publisher, InstallDate |
-                Format-Table –AutoSize
+                Format-Table ï¿½AutoSize
 }
 
 Function ShowSoftwareList {
@@ -79,7 +82,7 @@ Function UninstallMsftBloat {
     	"Microsoft.BingNews"
     	"Microsoft.BingSports"
 	    "Microsoft.BingTranslator"
-#	     "Microsoft.BingWeather"
+	    # "Microsoft.BingWeather"
 	    "Microsoft.CommsPhone"
 	    "Microsoft.ConnectivityStore"
 	    "Microsoft.GetHelp"
@@ -103,17 +106,17 @@ Function UninstallMsftBloat {
 	    "Microsoft.Wallet"
 	    "Microsoft.WindowsAlarms"
 	    "Microsoft.WindowsCamera"
-	    "microsoft.windowscommunicationsapps"
+	    # "microsoft.windowscommunicationsapps"
 	    "Microsoft.WindowsFeedbackHub"
 	    "Microsoft.WindowsMaps"
 	    "Microsoft.WindowsPhone"
 	    "Microsoft.WindowsSoundRecorder"
-#        "Microsoft.Windows.Photos"
-#        "Microsoft.ZuneMusic"
-#        "Microsoft.ZuneVideo"
+        # "Microsoft.Windows.Photos"
+        # "Microsoft.ZuneMusic"
+        # "Microsoft.ZuneVideo"
 
-#        "Microsoft.MicrosoftEdge"
-#        "Microsoft.549981C3F5F10" # Cortana
+        # "Microsoft.MicrosoftEdge"
+        # "Microsoft.549981C3F5F10" # Cortana
     )
 
     ForEach ($MsftApp in $MsftAppsList) {
@@ -177,13 +180,13 @@ Function DebloatWindowsApps {
         "Microsoft.BingHealthAndFitness"
         "Microsoft.BingNews"
         "Microsoft.BingTravel"
-#        "Microsoft.BingWeather"
+        # "Microsoft.BingWeather"
         "Microsoft.GetHelp"
         "Microsoft.Getstarted"
         "Microsoft.Messaging"
         "Microsoft.Microsoft3DViewer"
         "Microsoft.MicrosoftSolitaireCollection"
-#        "Microsoft.MicrosoftStickyNotes"
+        # "Microsoft.MicrosoftStickyNotes"
         "Microsoft.MSPaint"
         "Microsoft.NetworkSpeedTest"
         "Microsoft.News"
@@ -194,14 +197,14 @@ Function DebloatWindowsApps {
         "Microsoft.People"
         "Microsoft.Print3D"
         "Microsoft.SkypeApp"
-#        "Microsoft.Todos"
-#        "Microsoft.Whiteboard"
+        # "Microsoft.Todos"
+        # "Microsoft.Whiteboard"
         "Microsoft.WindowsAlarms"
-        "microsoft.windowscommunicationsapps"
+        # "microsoft.windowscommunicationsapps"
         "Microsoft.WindowsFeedbackHub"
         "Microsoft.WindowsMaps"
         "Microsoft.WindowsSoundRecorder"
-#        "Microsoft.StorePurchaseApp"
+        # "Microsoft.StorePurchaseApp"
 
         ## Microsoft Office Appx Apps
         "*Microsoft.Office.Desktop.Access*" 
@@ -260,7 +263,14 @@ Function DebloatWindowsApps {
     }
 }
 
+#---
 
+Function InstallApp_1 {
+    $App = "microsoft.windowscommunicationsapps"
+	Get-AppxPackage -AllUsers $App | ForEach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"}
+}
+
+Function UninstallApp_1 {}
 
 ###
 
@@ -316,4 +326,4 @@ $Tweaks | ForEach { Invoke-Expression $_ }
 #- Get-AppxPackage *XboxOneSmartGlass* | Remove-AppxPackage                # xbox one smartglass
 
 #remove xbox game bar
-# Get-appxprovisionedpackage –online | where-object {$_.packagename –like "*Microsoft.XboxGamingOverlay*"} | remove-appxprovisionedpackage –online
+# Get-appxprovisionedpackage ï¿½online | where-object {$_.packagename ï¿½like "*Microsoft.XboxGamingOverlay*"} | remove-appxprovisionedpackage ï¿½online

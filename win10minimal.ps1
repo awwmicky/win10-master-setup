@@ -2253,7 +2253,7 @@ Function DebloatWindowsApps {
         "Microsoft.BingHealthAndFitness"
         "Microsoft.BingNews"
         "Microsoft.BingTravel"
-        "Microsoft.BingWeather"
+        # "Microsoft.BingWeather"
         "Microsoft.GetHelp"
         "Microsoft.Getstarted"
         "Microsoft.Messaging"

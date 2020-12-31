@@ -11,33 +11,40 @@
 
 # C:\ProgramData\chocolatey\logs\chocolatey.log
 <#
-> check new env var
-- refreshenv
-
 > FIXIT
-- figma: unmatched hash - FA0D98788E713B071FDFF30A1790BBCFBC0E31BDB35035AC2AA08E105564C1EB
-- minibin: zip file
-- QTBar: code error
+- figma: unmatched hash issue - FA0D98788E713B071FDFF30A1790BBCFBC0E31BDB35035AC2AA08E105564C1EB
+- minibin: unable to zip file
 #>
 
 $Tweaks = @(
     "InitiateChocolatey"
+    
+    <# App - General #>
     "InstallChrome"
     "InstallBrave"
     "InstallQBittorrent"
 
+    <# APP - Communition #>
     "InstallZoom"
     "InstallSlack"
     "InstallDiscord"
+    
+    <# APP - Productivity #>
     "InstallEvernote"
     "InstallNotion"
     "InstallNotepad3"
+    # "InstallNotepadplusplus"
 
-    "InstallFigma"
-    "InstallInkscape"
-    "InstallGIMP"
-    "InstallFontBase"
+    <# APP - Other #>
+    "InstallShareX"
+    #"InstallIrfanview"
+    "InstallMasterPDFEditor"
+    #"InstallAdobeReader"
+    #"InstallVLC"
 
+    ###
+
+    <# WIN10 - Extensions #>
     "InstallPowerToys"
     "InstallQuickLook"
     "InstallMiniBin"
@@ -46,19 +53,18 @@ $Tweaks = @(
     "InstallTaskBarX"
     "Install7Zip"
 
-    "InstallShareX"
-    #"InstallIrfanview"
-    #"InstallAdobe"
-    #"InstallVLC"
+    ###
 
-    "InstallUbuntu"
-    "IntstallWSL"
-    "InstallWinTerminal"
-    "InstallPowershellCore"
-    "InstallGit"
+    <# Design - Tools #>
+    "InstallFigma"
+    "InstallInkscape"
+    "InstallGIMP"
+    "InstallFontBase"    
 
+    ###
+
+    <# DEV - Tools #>
     "InstallVSCode"
-    "InstallNotepadplusplus"
     "InstallNode"
     "InstallDeno"
     "InstallPython"
@@ -66,6 +72,14 @@ $Tweaks = @(
     "InstallGitHubCLI"
     "InstallInsomnia"
 
+    <# DEV - Terminals #>
+    "IntstallWSL"
+    "InstallUbuntu"
+    "InstallWinTerminal"
+    "InstallPowershellCore"
+    "InstallGit"
+
+    <# DEV - DB #>
     "InstallMySQL"
     "InstallPostgreSQL"
     "InstallPGAdmin"
@@ -155,7 +169,7 @@ Function InstallqBittorrent {
 }
 
 
-<# App - Productivity Tools #>
+<# App - Communication #>
 
 
 Function InstallZoom {
@@ -173,6 +187,10 @@ Function InstallDiscord {
 	Show-Choco-Menu -Link $Link -Title "Discord" -ChocoInstall "discord"
 }
 
+
+<# App - Productivity #>
+
+
 Function InstallEvernote {
     $Link = "https://evernote.com/"
 	Show-Choco-Menu -Link $Link -Title "Evernote" -ChocoInstall "evernote"
@@ -188,32 +206,13 @@ Function InstallNotepad3 {
 	Show-Choco-Menu -Link $Link -Title "Notepad3" -ChocoInstall "notepad3"    
 }
 
-
-<# Design Work Tools #>
-
-Function InstallFigma {
-    $Link = "https://www.figma.com/"
-    Show-Choco-Menu -Link $Link -Title "Figma" -ChocoInstall "figma"
-}
-#InstallFigma
-
-Function InstallInkscape {
-    $Link = "https://inkscape.org/release/inkscape-1.0.1/"
-    Show-Choco-Menu -Link $Link -Title "Inkscape" -ChocoInstall "inkscape"
-}
-
-Function InstallGIMP {
-    $Link = "https://www.gimp.org/"
-    Show-Choco-Menu -Link $Link -Title "GIMP" -ChocoInstall "gimp"
-}
-
-Function InstallFontBase {
-    $Link = "https://fontba.se/"
-    Show-Choco-Menu -Link $Link -Title "FontBase" -ChocoInstall "fontbase"
+Function InstallNotepadplusplus {
+	$Link = "https://notepad-plus-plus.org/"
+    Show-Choco-Menu -Link $Link -Title "Notepad++" -ChocoInstall "notepadplusplus"
 }
 
 
-<# App - Extensions #>
+<# WIN10 - Extensions #>
 
 
 Function InstallPowerToys {
@@ -227,6 +226,7 @@ Function InstallQuickLook {
 }
 
 Function InstallMiniBin {
+    # FIXIT - find way to install
     $Link = "https://e-sushi.net/"
 	Show-Choco-Menu -Link $Link -Title "MiniBin" -ChocoInstall "minibin"
 }
@@ -241,8 +241,8 @@ Function InstallQTTabBar {
 	Show-Choco-Menu -Link $Link -Title "QT Tab Bar" -ChocoInstall "qttabbar"
 }
 
-# EDIT/FIND
 Function InstallTaskBarX {
+    # EDIT - find way to install
     $Link = "https://github.com/ChrisAnd1998/TaskbarX"
 	Show-Choco-Menu -Link $Link -Title "TaskBarX" -ChocoInstall ""
 }
@@ -265,8 +265,13 @@ Function InstallIrfanview {
 	Show-Choco-Menu -Link $Link -Title "Irfanview" -ChocoInstall "irfanview"
 }
 
-Function InstallAdobe {
-    $Link = "https://get.adobe.com/reader/"
+Function InstallMasterPDFEditor {
+    $Link = "https://code-industry.net/masterpdfeditor/"
+	Show-Choco-Menu -Link $Link -Title "Master PDF Editor" -ChocoInstall "master-pdf-editor"
+}
+
+Function InstallAdobeReader {
+    $Link = "https://acrobat.adobe.com/us/en/acrobat/pdf-reader.html"
 	Show-Choco-Menu -Link $Link -Title "Adobe Acrobat Reader" -ChocoInstall "adobereader"
 }
 
@@ -276,39 +281,34 @@ Function InstallVLC {
 }
 
 
+<# Design - Tools #>
+
+Function InstallFigma {
+    $Link = "https://www.figma.com/"
+    Show-Choco-Menu -Link $Link -Title "Figma" -ChocoInstall "figma"
+}
+# InstallFigma # FIXIT
+
+Function InstallInkscape {
+    $Link = "https://inkscape.org/release/inkscape-1.0.1/"
+    Show-Choco-Menu -Link $Link -Title "Inkscape" -ChocoInstall "inkscape"
+}
+
+Function InstallGIMP {
+    $Link = "https://www.gimp.org/"
+    Show-Choco-Menu -Link $Link -Title "GIMP" -ChocoInstall "gimp"
+}
+
+Function InstallFontBase {
+    $Link = "https://fontba.se/"
+    Show-Choco-Menu -Link $Link -Title "FontBase" -ChocoInstall "fontbase"
+}
+
+
 
 ########
 # DEV LIST
 ########
-
-<# Development - Terminals #>
-
-
-Function InstallUbuntu {
-    $Link = "https://ubuntu.com/"
-    Show-Choco-Menu -Link $Link -Title "Ubuntu" -ChocoInstall "wsl-ubuntu-1804"
-}
-InstallUbuntu
-
-Function IntstallWSL {
-    $Link = "https://ubuntu.com/wsl"
-    Show-Choco-Menu -Link $Link -Title "Windows Subsystem for Linux" -ChocoInstall "wsl"
-}
-
-Function InstallWinTerminal {
-    $Link = "https://github.com/microsoft/terminal/releases"
-	Show-Choco-Menu -Link $Link -Title "Microsoft Windows Terminal" -ChocoInstall "microsoft-windows-terminal"
-}
-
-Function InstallPowershellCore {
-    $Link = "https://github.com/PowerShell/PowerShell/releases"
-	Show-Choco-Menu -Link $Link -Title "Powershell Core" -ChocoInstall "powershell-core"
-}
-
-Function InstallGit {
-    $Link = "https://git-scm.com/downloads"
-    Show-Choco-Menu -Link $Link -Title "Git + Bash" -ChocoInstall "git"
-}
 
 
 <# Development - Tools #>
@@ -317,11 +317,6 @@ Function InstallGit {
 Function InstallVSCode {
     $Link = "https://code.visualstudio.com/"
 	Show-Choco-Menu -Link $Link -Title "Visual Studio Code" -ChocoInstall "vscode"
-}
-
-Function InstallNotepadplusplus {
-	$Link = "https://notepad-plus-plus.org/"
-    Show-Choco-Menu -Link $Link -Title "Notepad++" -ChocoInstall "notepadplusplus"
 }
 
 Function InstallNode {
@@ -352,6 +347,35 @@ Function InstallGitHubCLI {
 Function InstallInsomniaCore {
     $Link = "https://insomnia.rest/download/"
     Show-Choco-Menu -Link $Link -Title "Insomnia" -ChocoInstall "insomnia-rest-api-client"
+}
+
+
+<# Development - Terminals #>
+
+
+Function IntstallWSL {
+    $Link = "https://ubuntu.com/wsl"
+    Show-Choco-Menu -Link $Link -Title "Windows Subsystem for Linux" -ChocoInstall "wsl"
+}
+
+Function InstallUbuntu {
+    $Link = "https://ubuntu.com/"
+    Show-Choco-Menu -Link $Link -Title "Ubuntu" -ChocoInstall "wsl-ubuntu-2004"
+}
+
+Function InstallPowershellCore {
+    $Link = "https://github.com/PowerShell/PowerShell/releases"
+	Show-Choco-Menu -Link $Link -Title "Powershell Core" -ChocoInstall "powershell-core"
+}
+
+Function InstallGit {
+    $Link = "https://git-scm.com/downloads"
+    Show-Choco-Menu -Link $Link -Title "Git + Bash" -ChocoInstall "git"
+}
+
+Function InstallWinTerminal {
+    $Link = "https://github.com/microsoft/terminal/releases"
+	Show-Choco-Menu -Link $Link -Title "Microsoft Windows Terminal" -ChocoInstall "microsoft-windows-terminal"
 }
 
 
