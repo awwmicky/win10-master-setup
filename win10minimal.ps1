@@ -30,7 +30,7 @@ If (!(Get-PSDrive HKCR -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKCR 
 If (!(Get-PSDrive HKLM -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKLM -PSProvider Registry -Root HKEY_LOCAL_MACHINE | Out-Null }
 
 $tweaks = @(
-	### Require administrator privileges ###
+	### Require Administrator Privileges ###
 	"RequireAdmin",
 	"CreateRestorePoint",
 	
@@ -49,7 +49,16 @@ $tweaks = @(
     # "InstallWinTerminal",
     # "InstallPowerToys",
 	# "ChangeDefaultApps",
-
+	
+	
+	### Prompt Options ###
+	# "PromptWinDefender",
+	# "PromptOneDrive",
+	# "PromptCortana",
+	# "PromptXBox",
+	# "PromptMsftPPS",
+	# "PromptMsftPPX",
+	
 
 	### Privacy Tweaks ###
 	"DisableTelemetry",             # "EnableTelemetry",
@@ -175,16 +184,16 @@ $tweaks = @(
     "UninstallLegacyComponents",    # "UninstallLegacyComponents",
     "UninstallMediaPlayer",         # "InstallMediaPlayer",
     "UninstallInternetExplorer",    # "InstallInternetExplorer",
-    "UninstallPowershellV2",        # "InstallPowershellV2"	
+    "UninstallPowershell",        	# "InstallPowershell"	
     "UninstallWorkFolders",         # "InstallWorkFolders",
 	"InstallLinuxSubsystem",        # "UninstallLinuxSubsystem",
+	"InstallVirtualMachine",		# "UninstallVirtualMachine"
 	# "InstallHyperV",                # "UninstallHyperV",
-	# "SetPhotoViewerAssociation",    # "UnsetPhotoViewerAssociation",
-	# "AddPhotoViewerOpenWith",       # "RemovePhotoViewerOpenWith",
 	"InstallPDFPrinter"		        # "UninstallPDFPrinter",
 	"UninstallXPSPrinter",          # "InstallXPSPrinter",
 	"RemoveFaxPrinter",             # "AddFaxPrinter",
-
+	# "SetPhotoViewerAssociation",    # "UnsetPhotoViewerAssociation",
+	# "AddPhotoViewerOpenWith",       # "RemovePhotoViewerOpenWith",
 
 	### Server Specific Tweaks ###
 	# "HideServerManagerOnLogin",     # "ShowServerManagerOnLogin",
@@ -202,7 +211,7 @@ $tweaks = @(
 
     ### Bonus Script Tweaks ###
     # "EnableDarkMode",
-    "RemoveFilesToMsftEdge",
+    "RemoveOpenFileToMsftEdge",
     "RemovePaint3DContextMenu",
 
 
@@ -262,51 +271,49 @@ Function InstallTitusProgs {
 #---
 
 Function InstallChrome {
-    do {
+    Do {
         Clear-Host
         Write-Host "================ Do You Want to Install Chrome Browser? ================"
         Write-Host "Y: Press 'Y' to do this."
         Write-Host "N: Press 'N' to skip this."
 	    Write-Host "Q: Press 'Q' to stop the entire script."
         $selection = Read-Host "Please make a selection"
-    switch ($selection)
-    {
-    'y' { 
-        Invoke-WebRequest "http://dl.google.com/chrome/install/375.126/chrome_installer.exe" -OutFile $env:USERPROFILE\Downloads\chrome_installer.exe; 
-        Start-Process -FilePath $env:USERPROFILE\Downloads\chrome_installer.exe -Args "/silent /install" -Verb RunAs -Wait; 
-	}
-    'n' { Break }
-    'q' { Exit  }
-    }
-    }
-    until ($selection -match "y" -or $selection -match "n" -or $selection -match "q")
+		
+		Switch ($selection) {
+		'y' { 
+			Invoke-WebRequest "http://dl.google.com/chrome/install/375.126/chrome_installer.exe" -OutFile $env:USERPROFILE\Downloads\chrome_installer.exe; 
+			Start-Process -FilePath $env:USERPROFILE\Downloads\chrome_installer.exe -Args "/silent /install" -Verb RunAs -Wait; 
+		}
+		'n' { Break }
+		'q' { Exit  }
+		}
+    } Until ($selection -match "y" -or $selection -match "n" -or $selection -match "q")
 }
 
 Function InstallBrave {
-	do {
+	Do {
         Clear-Host
         Write-Host "================ Do You Want to Install Brave Browser? ================"
         Write-Host "Y: Press 'Y' to do this."
         Write-Host "N: Press 'N' to skip this."
 	    Write-Host "Q: Press 'Q' to stop the entire script."
         $Selection = Read-Host "Please make a selection"
-    switch ($Selection)
-    {
-    'y' { 
-		Invoke-WebRequest -Uri "https://laptop-updates.brave.com/download/CHR253" -OutFile $env:USERPROFILE\Downloads\brave.exe
-		~/Downloads/brave.exe
-	}
-    'n' { Break }
-    'q' { Exit  }
-    }
-    }
-    until ($Selection -match "y" -or $selection -match "n" -or $selection -match "q")
+		
+		Switch ($Selection) {
+		'y' { 
+			Invoke-WebRequest -Uri "https://laptop-updates.brave.com/download/CHR253" -OutFile $env:USERPROFILE\Downloads\brave.exe
+			~/Downloads/brave.exe
+		}
+		'n' { Break }
+		'q' { Exit  }
+		}
+    } Until ($Selection -match "y" -or $selection -match "n" -or $selection -match "q")
 }
 
 #---
 
 Function Show-Choco-Menu {
-    param(
+    Param(
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [string]$Title,
@@ -316,21 +323,20 @@ Function Show-Choco-Menu {
         [string]$ChocoInstall
     )
    
-    do {
+    Do {
         Clear-Host
         Write-Host "================ Do you want to install $Title ? ================"
         Write-Host "Y: Press 'Y' to do this."
         Write-Host "2: Press 'N' to skip this."
 	    Write-Host "Q: Press 'Q' to stop the entire script."
         $Selection = Read-Host "Please make a selection"
-    switch ($Selection)
-    {
-    'y' { choco install $ChocoInstall -y }
-    'n' { Break }
-    'q' { Exit  }
-    }
-    }
-    until ($Selection -match "y" -or $selection -match "n" -or $selection -match "q")
+		
+		Switch ($Selection) {
+		'y' { choco install $ChocoInstall -y }
+		'n' { Break }
+		'q' { Exit  }
+		}
+    } Until ($Selection -match "y" -or $selection -match "n" -or $selection -match "q")
 }
 
 Function InstallAdobe {
@@ -2650,13 +2656,17 @@ Function InstallLegacyComponents {
 # Uninstall Windows Media Player
 Function UninstallMediaPlayer {
 	Write-Output "Uninstalling Windows Media Player..."
+	Disable-WindowsOptionalFeature -Online -FeatureName "MediaPlayback" -NoRestart -WarningAction SilentlyContinue | Out-Null
 	Disable-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" -NoRestart -WarningAction SilentlyContinue | Out-Null
+	Remove-WindowsCapability -Online -Name "*Media.WindowsMediaPlayer*"
 }
 
 # Install Windows Media Player
 Function InstallMediaPlayer {
 	Write-Output "Installing Windows Media Player..."
+	Enable-WindowsOptionalFeature -Online -FeatureName "MediaPlayback" -NoRestart -WarningAction SilentlyContinue | Out-Null
 	Enable-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" -NoRestart -WarningAction SilentlyContinue | Out-Null
+	Add-WindowsCapability -Online -Name "*Media.WindowsMediaPlayer*"
 }
 
 #---
@@ -2665,25 +2675,30 @@ Function InstallMediaPlayer {
 Function UninstallInternetExplorer {
 	Write-Output "Uninstalling Internet Explorer..."
 	Disable-WindowsOptionalFeature -Online -FeatureName "Internet-Explorer-Optional-$env:PROCESSOR_ARCHITECTURE" -NoRestart -WarningAction SilentlyContinue | Out-Null
+	Remove-WindowsCapability -Online -Name "*Browser.InternetExplorer*"
 }
 
 # Install Internet Explorer
 Function InstallInternetExplorer {
 	Write-Output "Installing Internet Explorer..."
 	Enable-WindowsOptionalFeature -Online -FeatureName "Internet-Explorer-Optional-$env:PROCESSOR_ARCHITECTURE" -NoRestart -WarningAction SilentlyContinue | Out-Null
+	Add-WindowsCapability -Online -Name "*Browser.InternetExplorer*"
 }
 
 #---
-# Uninstall Powershell V2.0
-Function UninstallPowerShellV2 {
-	Write-Output "Uninstalling PowerShell V2.0..."
+
+# Uninstall Powershell V2.0 & ISE
+Function UninstallPowerShell {
+	Write-Output "Uninstalling PowerShell V2.0 ISE..."
 	Disable-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2Root" -NoRestart -WarningAction SilentlyContinue | Out-Null
+	Remove-WindowsCapability -Online -Name "*Microsoft.Windows.PowerShell.ISE*"
 }
 
-# Install Powershell V2.0
-Function InstallPowerShellV2 {
-	Write-Output "Installing PowerShell V2.0..."
+# Install Powershell V2.0 & ISE
+Function InstallPowerShell {
+	Write-Output "Installing PowerShell V2.0 & ISE..."
 	Enable-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2Root" -NoRestart -WarningAction SilentlyContinue | Out-Null
+	Add-WindowsCapability -Online -Name "*Microsoft.Windows.PowerShell.ISE*"
 }
 
 #---
@@ -2726,6 +2741,18 @@ Function InstallLinuxSubsystem {
 
 #---
 
+Function UninstallVirtualMachine {
+	Write-Host "Uninstalling Virtual Machine Platform..."
+	Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -NoRestart -WarningAction SilentlyContinue | Out-Null
+}
+
+Function InstallVirtualMachine {
+	Write-Host "Installing Virtual Machine Platform..."
+	Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -NoRestart -WarningAction SilentlyContinue | Out-Null
+}
+
+#---
+
 # Uninstall Hyper-V - Not applicable to Home
 Function UninstallHyperV {
 	Write-Output "Uninstalling Hyper-V..."
@@ -2746,6 +2773,50 @@ Function InstallHyperV {
     Else {
 		Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Hyper-V-All" -NoRestart -WarningAction SilentlyContinue | Out-Null
 	}
+}
+
+#---
+
+# Uninstall Microsoft Print to PDF
+Function UninstallPDFPrinter {
+	Write-Output "Uninstalling Microsoft Print to PDF..."
+	Disable-WindowsOptionalFeature -Online -FeatureName "Printing-PrintToPDFServices-Features" -NoRestart -WarningAction SilentlyContinue | Out-Null
+}
+
+# Install Microsoft Print to PDF
+Function InstallPDFPrinter {
+	Write-Output "Installing Microsoft Print to PDF..."
+	Enable-WindowsOptionalFeature -Online -FeatureName "Printing-PrintToPDFServices-Features" -NoRestart -WarningAction SilentlyContinue | Out-Null
+}
+
+#---
+
+# Uninstall Microsoft XPS Document Writer
+Function UninstallXPSPrinter {
+	Write-Output "Uninstalling Microsoft XPS Document Writer..."
+	Disable-WindowsOptionalFeature -Online -FeatureName "Printing-XPSServices-Features" -NoRestart -WarningAction SilentlyContinue | Out-Null
+}
+
+# Install Microsoft XPS Document Writer
+Function InstallXPSPrinter {
+	Write-Output "Installing Microsoft XPS Document Writer..."
+	Enable-WindowsOptionalFeature -Online -FeatureName "Printing-XPSServices-Features" -NoRestart -WarningAction SilentlyContinue | Out-Null
+}
+
+#---
+
+# Remove Default Fax Printer
+Function RemoveFaxPrinter {
+	Write-Output "Removing Default Fax Printer..."
+	Remove-Printer -Name "Fax" -ErrorAction SilentlyContinue
+	Remove-WindowsCapability -Online -Name "*Print.Fax.Scan*"
+}
+
+# Add Default Fax Printer
+Function AddFaxPrinter {
+	Write-Output "Adding Default Fax Printer..."
+	Add-Printer -Name "Fax" -DriverName "Microsoft Shared Fax Driver" -PortName "SHRFAX:" -ErrorAction SilentlyContinue
+	Add-WindowsCapability -Online -Name "*Print.Fax.Scan*"
 }
 
 #---
@@ -2797,48 +2868,6 @@ Function AddPhotoViewerOpenWith {
 	Set-ItemProperty -Path "HKCR:\Applications\photoviewer.dll\shell\open" -Name "MuiVerb" -Type String -Value "@photoviewer.dll,-3043"
 	Set-ItemProperty -Path "HKCR:\Applications\photoviewer.dll\shell\open\command" -Name "(Default)" -Type ExpandString -Value "%SystemRoot%\System32\rundll32.exe `"%ProgramFiles%\Windows Photo Viewer\PhotoViewer.dll`", ImageView_Fullscreen %1"
 	Set-ItemProperty -Path "HKCR:\Applications\photoviewer.dll\shell\open\DropTarget" -Name "Clsid" -Type String -Value "{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-}
-
-#---
-
-# Uninstall Microsoft Print to PDF
-Function UninstallPDFPrinter {
-	Write-Output "Uninstalling Microsoft Print to PDF..."
-	Disable-WindowsOptionalFeature -Online -FeatureName "Printing-PrintToPDFServices-Features" -NoRestart -WarningAction SilentlyContinue | Out-Null
-}
-
-# Install Microsoft Print to PDF
-Function InstallPDFPrinter {
-	Write-Output "Installing Microsoft Print to PDF..."
-	Enable-WindowsOptionalFeature -Online -FeatureName "Printing-PrintToPDFServices-Features" -NoRestart -WarningAction SilentlyContinue | Out-Null
-}
-
-#---
-
-# Uninstall Microsoft XPS Document Writer
-Function UninstallXPSPrinter {
-	Write-Output "Uninstalling Microsoft XPS Document Writer..."
-	Disable-WindowsOptionalFeature -Online -FeatureName "Printing-XPSServices-Features" -NoRestart -WarningAction SilentlyContinue | Out-Null
-}
-
-# Install Microsoft XPS Document Writer
-Function InstallXPSPrinter {
-	Write-Output "Installing Microsoft XPS Document Writer..."
-	Enable-WindowsOptionalFeature -Online -FeatureName "Printing-XPSServices-Features" -NoRestart -WarningAction SilentlyContinue | Out-Null
-}
-
-#---
-
-# Remove Default Fax Printer
-Function RemoveFaxPrinter {
-	Write-Output "Removing Default Fax Printer..."
-	Remove-Printer -Name "Fax" -ErrorAction SilentlyContinue
-}
-
-# Add Default Fax Printer
-Function AddFaxPrinter {
-	Write-Output "Adding Default Fax Printer..."
-	Add-Printer -Name "Fax" -DriverName "Microsoft Shared Fax Driver" -PortName "SHRFAX:" -ErrorAction SilentlyContinue
 }
 
 
@@ -3026,7 +3055,7 @@ Function EnableDarkMode {
 
 #---
 
-Function RemoveFilesToMsftEdge {
+Function RemoveOpenFileToMsftEdge {
     Write-Host "Removing 'File Open With Microsoft Edge'..."
 
     #Identify the edge application class 

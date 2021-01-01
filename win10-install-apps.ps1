@@ -9,13 +9,6 @@
 
 ###
 
-# C:\ProgramData\chocolatey\logs\chocolatey.log
-<#
-> FIXIT
-- figma: unmatched hash issue - FA0D98788E713B071FDFF30A1790BBCFBC0E31BDB35035AC2AA08E105564C1EB
-- minibin: unable to zip file
-#>
-
 $Tweaks = @(
     "InitiateChocolatey"
     
@@ -24,7 +17,7 @@ $Tweaks = @(
     "InstallBrave"
     "InstallQBittorrent"
 
-    <# APP - Communition #>
+    <# APP - Communication #>
     "InstallZoom"
     "InstallSlack"
     "InstallDiscord"
@@ -47,16 +40,18 @@ $Tweaks = @(
     <# WIN10 - Extensions #>
     "InstallPowerToys"
     "InstallQuickLook"
-    "InstallMiniBin"
+#    "InstallMiniBin" #FIXIT
     "InstallTClock"
     "InstallQTTabBar"
-    "InstallTaskBarX"
+#    "InstallTaskBarX" #FIXIT
+	"InstallFlux"
     "Install7Zip"
 
     ###
 
     <# Design - Tools #>
-    "InstallFigma"
+#    "InstallAdobeXD" #ADDIT
+#    "InstallFigma" #FIXIT
     "InstallInkscape"
     "InstallGIMP"
     "InstallFontBase"    
@@ -73,13 +68,13 @@ $Tweaks = @(
     "InstallInsomnia"
 
     <# DEV - Terminals #>
-    "IntstallWSL"
+    "InstallWSL"
     "InstallUbuntu"
     "InstallWinTerminal"
     "InstallPowershellCore"
     "InstallGit"
 
-    <# DEV - DB #>
+    <# DEV - Databases #>
     "InstallMySQL"
     "InstallPostgreSQL"
     "InstallPGAdmin"
@@ -150,7 +145,7 @@ Function Show-Choco-Menu {
 ########
 
 
-<# App - General #>
+<# APP - General #>
 
 
 Function InstallChrome {
@@ -169,7 +164,7 @@ Function InstallqBittorrent {
 }
 
 
-<# App - Communication #>
+<# APP - Communication #>
 
 
 Function InstallZoom {
@@ -188,7 +183,7 @@ Function InstallDiscord {
 }
 
 
-<# App - Productivity #>
+<# APP - Productivity #>
 
 
 Function InstallEvernote {
@@ -211,6 +206,40 @@ Function InstallNotepadplusplus {
     Show-Choco-Menu -Link $Link -Title "Notepad++" -ChocoInstall "notepadplusplus"
 }
 
+
+<# APP - Other #>
+
+
+Function InstallShareX {
+    $Link = "https://getsharex.com/"
+	Show-Choco-Menu -Link $Link -Title "ShareX" -ChocoInstall "sharex"
+}
+
+Function InstallIrfanview {
+    $Link = "https://www.irfanview.com/"
+	Show-Choco-Menu -Link $Link -Title "Irfanview" -ChocoInstall "irfanview"
+}
+
+Function InstallMasterPDFEditor {
+    $Link = "https://code-industry.net/masterpdfeditor/"
+	Show-Choco-Menu -Link $Link -Title "Master PDF Editor" -ChocoInstall "master-pdf-editor"
+}
+
+Function InstallAdobeReader {
+    $Link = "https://acrobat.adobe.com/us/en/acrobat/pdf-reader.html"
+	Show-Choco-Menu -Link $Link -Title "Adobe Acrobat Reader" -ChocoInstall "adobereader"
+}
+
+Function InstallVLC {
+    $Link = "https://www.videolan.org/vlc/"
+	Show-Choco-Menu -Link $Link -Title "VLC" -ChocoInstall "vlc"
+}
+
+
+
+########
+# WIN10 LIST
+########
 
 <# WIN10 - Extensions #>
 
@@ -244,7 +273,12 @@ Function InstallQTTabBar {
 Function InstallTaskBarX {
     # EDIT - find way to install
     $Link = "https://github.com/ChrisAnd1998/TaskbarX"
-	Show-Choco-Menu -Link $Link -Title "TaskBarX" -ChocoInstall ""
+#	Show-Choco-Menu -Link $Link -Title "" -ChocoInstall ""
+}
+
+Function InstallFlux {
+	$Link = "https://justgetflux.com/"
+	Show-Choco-Menu -Link $Link -Title "f.lux" -ChocoInstall "f.lux"
 }
 
 Function Install7Zip {
@@ -253,35 +287,12 @@ Function Install7Zip {
 }
 
 
-<# App - Other #>
-
-Function InstallShareX {
-    $Link = "https://getsharex.com/"
-	Show-Choco-Menu -Link $Link -Title "ShareX" -ChocoInstall "sharex"
-}
-
-Function InstallIrfanview {
-    $Link = "https://www.irfanview.com/"
-	Show-Choco-Menu -Link $Link -Title "Irfanview" -ChocoInstall "irfanview"
-}
-
-Function InstallMasterPDFEditor {
-    $Link = "https://code-industry.net/masterpdfeditor/"
-	Show-Choco-Menu -Link $Link -Title "Master PDF Editor" -ChocoInstall "master-pdf-editor"
-}
-
-Function InstallAdobeReader {
-    $Link = "https://acrobat.adobe.com/us/en/acrobat/pdf-reader.html"
-	Show-Choco-Menu -Link $Link -Title "Adobe Acrobat Reader" -ChocoInstall "adobereader"
-}
-
-Function InstallVLC {
-    $Link = "https://www.videolan.org/vlc/"
-	Show-Choco-Menu -Link $Link -Title "VLC" -ChocoInstall "vlc"
-}
-
-
 <# Design - Tools #>
+
+
+Function InstallAdobeXD {
+	$Link = "https://www.adobe.com/products/xd.html"
+}
 
 Function InstallFigma {
     $Link = "https://www.figma.com/"
@@ -426,75 +437,8 @@ Function InstallRobo3T {
 #>
 
 <#
-> Other Apps To Install
-- vivaldi
-- getsharex
-- bitwarden
-- foxitsoftware
-- protonvpn
-- ccleaner
-- voidtools
-- onlyoffice
-- rufus (ISO boot)
-- handbrake
-
-- ccleaner
-- cthing
-- implbits
-- riseup
-- sourcefoundry
-- ghostwriter
-- jabref
-- balena
-- rapidee
-- entropy6
-
-- open shell (start menu classic)
-- winscp
-~ win32diskimager
-~ winfsp
-~ winmerge
-- windirstat
-- typora
-- wincompose (char mapper)
-- winamp (music player)
-
-- windirstat
-- sysinternals
-- procexp
-- procmon
-- winmerge
-- autohotkey
-- fiddler4
-- virtualbox.extensionpack
-- nugetpackageexplorer
-- linqpad4 
-#>
-
-<#
 > Fonts
 - power font
 - mac type
 - nerd fonts
-#>
-
-<#
-**************************************************************************************
-*  As of OpenSSH 0.0.22.0 Universal Installer, a script is distributed that allows   *
-*  setting the default shell for openssh. You could call it with code like this:     *
-*    If (Test-Path "C:\Program Files\openssh-win64\Set-SSHDefaultShell.ps1")         *
-*      {& "C:\Program Files\openssh-win64\Set-SSHDefaultShell.ps1" [PARAMETERS]}     *
-*  Learn more with this:                                                             *
-*    Get-Help "C:\Program Files\openssh-win64\Set-SSHDefaultShell.ps1"               *
-*  Or here:                                                                          *
-*    https://github.com/DarwinJS/ChocoPackages/blob/master/openssh/readme.md         *
-**************************************************************************************
-#>
-
-<#
-Error - hashes do not match. Actual value was '0B1ABE8D5DC3FF416A06C9524E4F61A1FDF6CED583CB9B297EE72DF1732FF403'.
-ERROR: Checksum for 'C:\Users\MFA-PC\AppData\Local\Temp\chocolatey\wsl-ubuntu-1804\18.04.1.020181923\Ubuntu_1804.2019.522.0_x64.appx' did not meet '96E4E3E336F08DDE1DF81FA9C266C5C7750BA92729857E92BDE36BF84A1DB002' for checksum type 'sha256'. Consider passing the actual checksums through with --checksum --checksum64 once you validate the checksums are appropriate. A less secure option is to pass --ignore-checksums if necessary.
-The install of wsl-ubuntu-1804 was NOT successful.
-Error while running 'C:\ProgramData\chocolatey\lib\wsl-ubuntu-1804\tools\ChocolateyInstall.ps1'.
- See log for details.
 #>

@@ -3,11 +3,8 @@
 ###
 
 $Tweaks = @(
-#    "ShowAllList"
-#    "ShowCustomList"
-#    "ShowSoftwareList"
-#    "ShowMicrosoftStoreList"
-#    "ShowWindowsList"
+#    "ShowCustomAppList"
+#    "ShowSoftwareAppList"
 
     #"DisableOneDrive"
     #"DisableCortana"
@@ -17,13 +14,13 @@ $Tweaks = @(
     # "UninstallThirdPartyBloat"
     # "DebloatWindowsApps"
 
-    "InstallApp_1"
-    # "UninstallApp_1"
+#    "InstallApp_1"
+#    "UninstallApp_1"
 )
 
 ###
 
-Function ShowAllList {
+Function ShowCustomAppList {
     Clear-Host
 
 #    Write-Host "Showing All Windows Installed Apps & Packages List..."
@@ -42,7 +39,7 @@ Function ShowAllList {
 #    Get-Process | Where-Object { $_.MainWindowTitle } | Format-Table ID, Name, Mainwindowtitle �AutoSize
 }
 
-Function ShowCustomList {
+Function ShowSoftwareAppList {
     Clear-Host
 
     Write-Host "Showing Software Applications List..."
@@ -50,24 +47,12 @@ Function ShowCustomList {
     Get-ItemProperty "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*" | 
         Where-Object {$_.DisplayName -ne $null -and $_.SystemComponent -ne "1"} |
             Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | 
-                Format-Table �AutoSize
+                Format-Table -AutoSize
 
     Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | 
         Where-Object {$_.DisplayName -ne $null -and $_.SystemComponent -ne "1"} |
             Select-Object DisplayName, DisplayVersion, Publisher, InstallDate |
-                Format-Table �AutoSize
-}
-
-Function ShowSoftwareList {
-
-}
-
-Function ShowMicrosoftStoreList {
-
-}
-
-Function ShowWindowsList {
-
+                Format-Table -AutoSize
 }
 
 ###
@@ -253,6 +238,9 @@ Function DebloatWindowsApps {
 #        "*Microsoft.ZuneMusic*"
 #        "*Microsoft.ZuneVideo*"
     )
+    
+    Get-AppxPackage -Name "*Microsoft.WindowsNotepad*" | Remove-AppxPackage
+	Remove-WindowsCapability -Online -Name "*Microsoft.Windows.Notepad*"
 
     ForEach ($Bloat in $BloatwareList) {
         Get-AppxPackage -Name $Bloat| Remove-AppxPackage
