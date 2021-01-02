@@ -40,7 +40,7 @@ $Tweaks = @(
     <# WIN10 - Extensions #>
     "InstallPowerToys"
     "InstallQuickLook"
-#    "InstallMiniBin" #FIXIT
+    "InstallMiniBin"
     "InstallTClock"
     "InstallQTTabBar"
 #    "InstallTaskBarX" #FIXIT
@@ -96,7 +96,7 @@ Function InitiateChocolatey {
     Else {
         Write-Output "Installing Chocolatey ..."
         [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-        iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+        Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
         choco install chocolatey-core.extension chocolateygui -y
     }
 }
@@ -130,12 +130,12 @@ Function Show-Choco-Menu {
         Switch ($Selection) {
         'y' { 
             choco install $ChocoInstall -y 
-            Read-Host "Press enter to continue"
+            # Read-Host "Press enter to continue"
         }
         'n' { Break }
         'q' { Exit  }
         }
-    } Until ($Selection -match "y" -or $selection -match "n" -or $selection -match "q")
+    } Until ($Selection -match "[YNQ]" -and $Selection.Length -eq 1)
 }
 
 
@@ -255,7 +255,6 @@ Function InstallQuickLook {
 }
 
 Function InstallMiniBin {
-    # FIXIT - find way to install
     $Link = "https://e-sushi.net/"
 	Show-Choco-Menu -Link $Link -Title "MiniBin" -ChocoInstall "minibin"
 }
@@ -298,7 +297,7 @@ Function InstallFigma {
     $Link = "https://www.figma.com/"
     Show-Choco-Menu -Link $Link -Title "Figma" -ChocoInstall "figma"
 }
-# InstallFigma # FIXIT
+InstallFigma # FIXIT
 
 Function InstallInkscape {
     $Link = "https://inkscape.org/release/inkscape-1.0.1/"

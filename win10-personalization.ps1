@@ -66,20 +66,20 @@ If (!(Get-PSDrive HKLM -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKLM 
 
 ###
 
-$Tweak = @(
+$Tweaks = @(
     "EnableDevMode",
     "EnableWinInsiderProgram",
 
     "SetDesktopWallpaper",
     "EnableDarKMode",
-    #"EnableWinAccentColor", #FIXIT
-    #"EnableWinAccentOpt1",
+    # "EnableWinAccentColor", #FIXIT
+    # "EnableWinAccentOpt1",
     "EnableWinAccentOpt2",
 
-    #"SetLockSrceenBackground", #FIXIT
+    # "SetLockSrceenBackground", #FIXIT
     "DisableLockScreenTips",
-    #"DisableStartSuggestions",
-    #"ChooseStartFolders", #FIXIT
+    # "DisableStartSuggestions",
+    # "ChooseStartFolders", #FIXIT
     "EnableAeroPeek",
     "HideSearchBox",
     "HideCortanaButton",
@@ -92,21 +92,23 @@ $Tweak = @(
     "DisableNotificationOpt",
     "UpdatePowerPlan",
     "DisableTabletMode",
-    "DisableSnapWin",
+    "DisableWinSnapOpt",
     "DisableTimeLineSuggestion",
 
     "RemoveFileExplorerAds",
     "ShowFileExtensions",
-    #"DisableRecentFiles",
+    # "DisableRecentFiles",
     "DisableFrequentFolders",
+    "EnableRecycleBinNavPane",
+    "AddCustomQuickAccessBar",
 
     "EnableContextMenuOpts",
-    #"EnableFloatSearch", #EDIT
+    # "EnableWinFloatSearch",
     "EnablePCLogMessage",
     "DisableWinShake",
     "EnableLaunchLastClick",
     "SetIconSpacingX"
-    #"DefaultRecycleBinIcon"
+    # "DefaultRecycleBinIcon"
 )
 
 ###
@@ -119,7 +121,7 @@ Function EnableDevMode {
 Function EnableWinInsiderProgram {
     Write-Host "Enabling Windows Insider Program..."
     $Path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds"
-	If (!(Test-Path $Path)) { New-Item -Path $Path | Out-Null }    
+	If (!(Test-Path $Path)) { New-Item -Path $Path -Force | Out-Null }    
     Set-ItemProperty -Path $Path -Name "AllowBuildPreview" -Type Dword -Value 1
 }
 
@@ -234,18 +236,18 @@ Function InkWorkspaceButton {
 Function HideMeetNowButton {
     Write-Host "Hiding Meet Now Button on Taskbar..."
     $Path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"
-	If (!(Test-Path $Path)) { New-Item -Path $Path | Out-Null }
+	If (!(Test-Path $Path)) { New-Item -Path $Path -Force | Out-Null }
     Set-ItemProperty -Path $Path -Name "HideSCAMeetNow" -Type DWord -Value 1
 }
 
 Function HidePeopleButton {
     Write-Host "Hiding People Button on Taskbar..."
     $Path = "HKCU:\Software\Policies\Microsoft\Windows\Explorer"
-	If (!(Test-Path $Path)) { New-Item -Path $Path | Out-Null }
+	If (!(Test-Path $Path)) { New-Item -Path $Path -Force | Out-Null }
     Set-ItemProperty -Path $Path -Name "HidePeopleBar" -Type DWord -Value 1
    	#Write-Output "Hiding People icon..."
     $Path = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People"
-	If (!(Test-Path $Path)) { New-Item -Path $Path | Out-Null }
+	If (!(Test-Path $Path)) { New-Item -Path $Path -Force | Out-Null }
 	Set-ItemProperty -Path $Path -Name "PeopleBand" -Type DWord -Value 0
 }
 
@@ -265,7 +267,7 @@ Function DisableNotificationOpt {
     Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" -Name "NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK" -Type DWord -Value 0
     Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-310093Enabled" -Type DWord -Value 0
     $Path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement"
-	If (!(Test-Path $Path)) { New-Item -Path $Path | Out-Null }    
+	If (!(Test-Path $Path)) { New-Item -Path $Path -Force | Out-Null }    
     Set-ItemProperty -Path $Path -Name "ScoobeSystemSettingEnabled" -Type DWord -Value 0
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SoftLandingEnabled" -Type DWord -Value 0
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338389Enabled" -Type DWord -Value 0
@@ -294,8 +296,8 @@ Function DisableTabletMode {
 
 #---
 
-Function DisableSnapWin {
-    Write-Host "Disabling Snap Windows Option..."
+Function DisableWinSnapOpt {
+    Write-Host "Disabling Windows Snap Option..."
     $Path = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
     Write-Host "...automatically size it to fill available space"
     Set-ItemProperty -Path $Path -Name "SnapFill" -Type DWord -Value 0
@@ -333,6 +335,53 @@ Function DisableFrequentFolders {
     Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" -Name "ShowFrequent" -Type DWord -Value 0
 }
 
+Function EnablingRecycleBinNavPane {
+    Write-Host "Enabling File Explore Nav Pane: Recycle Bin..."
+    $Path = "HKCU:\Software\Classes\CLSID\{645FF040-5081-101B-9F08-00AA002F954E}"
+	If (!(Test-Path $Path)) { New-Item -Path $Path -Force | Out-Null }
+    Set-ItemProperty -Path $Path -Name "System.IsPinnedToNameSpaceTree" -Type DWord -Value 1
+}
+
+Function AddCustomQuickAccessBar {
+    Write-Host "Adding Custom Quick Access Tool Bar Options..."
+    Write-Host "...properties, new folder, size all columns to fit, empty recycle bin, eject, undo"
+
+    $BinaryHEX = (
+        "hex:3c,73,69,71,3a,63,75,73,74,6f,6d,55,49,20,78,6d,6c,6e,73,3a,73,\
+        69,71,3d,22,68,74,74,70,3a,2f,2f,73,63,68,65,6d,61,73,2e,6d,69,63,72,6f,73,\
+        6f,66,74,2e,63,6f,6d,2f,77,69,6e,64,6f,77,73,2f,32,30,30,39,2f,72,69,62,62,\
+        6f,6e,2f,71,61,74,22,3e,3c,73,69,71,3a,72,69,62,62,6f,6e,20,6d,69,6e,69,6d,\
+        69,7a,65,64,3d,22,74,72,75,65,22,3e,3c,73,69,71,3a,71,61,74,20,70,6f,73,69,\
+        74,69,6f,6e,3d,22,30,22,3e,3c,73,69,71,3a,73,68,61,72,65,64,43,6f,6e,74,72,\
+        6f,6c,73,3e,3c,73,69,71,3a,63,6f,6e,74,72,6f,6c,20,69,64,51,3d,22,73,69,71,\
+        3a,31,32,33,38,34,22,20,76,69,73,69,62,6c,65,3d,22,74,72,75,65,22,20,61,72,\
+        67,75,6d,65,6e,74,3d,22,30,22,20,2f,3e,3c,73,69,71,3a,63,6f,6e,74,72,6f,6c,\
+        20,69,64,51,3d,22,73,69,71,3a,31,32,33,33,36,22,20,76,69,73,69,62,6c,65,3d,\
+        22,74,72,75,65,22,20,61,72,67,75,6d,65,6e,74,3d,22,30,22,20,2f,3e,3c,73,69,\
+        71,3a,63,6f,6e,74,72,6f,6c,20,69,64,51,3d,22,73,69,71,3a,31,32,33,35,37,22,\
+        20,76,69,73,69,62,6c,65,3d,22,66,61,6c,73,65,22,20,61,72,67,75,6d,65,6e,74,\
+        3d,22,30,22,20,2f,3e,3c,73,69,71,3a,63,6f,6e,74,72,6f,6c,20,69,64,51,3d,22,\
+        73,69,71,3a,31,36,31,32,39,22,20,76,69,73,69,62,6c,65,3d,22,66,61,6c,73,65,\
+        22,20,61,72,67,75,6d,65,6e,74,3d,22,30,22,20,2f,3e,3c,73,69,71,3a,63,6f,6e,\
+        74,72,6f,6c,20,69,64,51,3d,22,73,69,71,3a,31,32,33,35,32,22,20,76,69,73,69,\
+        62,6c,65,3d,22,66,61,6c,73,65,22,20,61,72,67,75,6d,65,6e,74,3d,22,30,22,20,\
+        2f,3e,3c,73,69,71,3a,63,6f,6e,74,72,6f,6c,20,69,64,51,3d,22,73,69,71,3a,31,\
+        32,34,38,35,22,20,76,69,73,69,62,6c,65,3d,22,74,72,75,65,22,20,61,72,67,75,\
+        6d,65,6e,74,3d,22,30,22,20,2f,3e,3c,73,69,71,3a,63,6f,6e,74,72,6f,6c,20,69,\
+        64,51,3d,22,73,69,71,3a,31,34,35,39,32,22,20,76,69,73,69,62,6c,65,3d,22,74,\
+        72,75,65,22,20,61,72,67,75,6d,65,6e,74,3d,22,30,22,20,2f,3e,3c,73,69,71,3a,\
+        63,6f,6e,74,72,6f,6c,20,69,64,51,3d,22,73,69,71,3a,31,35,34,32,35,22,20,76,\
+        69,73,69,62,6c,65,3d,22,74,72,75,65,22,20,61,72,67,75,6d,65,6e,74,3d,22,30,\
+        22,20,2f,3e,3c,73,69,71,3a,63,6f,6e,74,72,6f,6c,20,69,64,51,3d,22,73,69,71,\
+        3a,31,36,31,32,38,22,20,76,69,73,69,62,6c,65,3d,22,74,72,75,65,22,20,61,72,\
+        67,75,6d,65,6e,74,3d,22,30,22,20,2f,3e,3c,2f,73,69,71,3a,73,68,61,72,65,64,\
+        43,6f,6e,74,72,6f,6c,73,3e,3c,2f,73,69,71,3a,71,61,74,3e,3c,2f,73,69,71,3a,\
+        72,69,62,62,6f,6e,3e,3c,2f,73,69,71,3a,63,75,73,74,6f,6d,55,49,3e"
+    )
+
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Ribbon" -Name "QatItems" -Type Binary -Value $BinaryHEX
+}
+
 #---
 #---
 
@@ -340,24 +389,21 @@ Function EnableContextMenuOpts {
     Write-Host "Enabling Context Menu Options..."
     $Path = "HKCR:\Allfilesystemobjects\shellex\ContextMenuHandlers"
     Write-Host "...Adding 'Copy To'"
-    If (!(Test-Path ($Path + "\Copy To..."))) { New-Item -Path ($Path + "\Copy To...") | Out-Null }
-    Set-Item -Path ($Path + "\Copy To...") -Value "{C2FBB630-2971-11d1-A18C-00C04FD75D13}"
+    If (!(Test-Path ("$Path\Copy To..."))) { New-Item -Path ("$Pa -Forceth\Copy To...") | Out-Null }
+    Set-Item -Path ("$Path\Copy To...") -Value "{C2FBB630-2971-11d1-A18C-00C04FD75D13}"
     Write-Host "...Adding 'Move To'"
-    If (!(Test-Path ($Path + "\Move To..."))) { New-Item -Path ($Path + "\Move To...") | Out-Null }
-    Set-Item -Path ($Path + "\Move To...") -Value "{C2FBB631-2971-11d1-A18C-00C04FD75D13}" 
+    If (!(Test-Path ("$Path\Move To..."))) { New-Item -Path ("$Pa -Forceth\Move To...") | Out-Null }
+    Set-Item -Path ("$Path\Move To...") -Value "{C2FBB631-2971-11d1-A18C-00C04FD75D13}" 
 }
 
-Function EnableFloatSearch {
-<#
-Enable Floating Search
-
-HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search
-- create: -Name "ImmersiveSearch" -Type DWord -Value 1
-.\Flighting
-- create folder (key): Override
-  - create: -Name "CenterScreenRoundedCornerRadius" -Type DWord -Value 9
-  - create: -Name "ImmersiveSearchFull" -Type DWord -Value 0
-#>
+Function EnableWinFloatSearch {
+    Write-Host "Enabling Windows Search Bar (Float)..."
+    $Path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search"
+    Set-ItemProperty -Path $Path -Name "ImmersiveSearch" -Type DWord -Value 1
+    $Path = "$Path\Flighting\Override"
+	If (!(Test-Path $Path)) { New-Item -Path $Path -Force | Out-Null }
+    Set-ItemProperty -Path $Path -Name "CenterScreenRoundedCornerRadius" -Type DWord -Value 9
+    Set-ItemProperty -Path $Path -Name "ImmersiveSearchFull" -Type DWord -Value 0
 }
 
 Function EnablePCLogMessage {
@@ -392,7 +438,7 @@ Function DefaultRecycleBinIcon {
 ###
 
 # Invoke Selected Tweaks
-$Tweaks | ForEach { Invoke-Expression $_ }
+# $Tweaks | ForEach { Invoke-Expression $_ }
 
 ###
 
