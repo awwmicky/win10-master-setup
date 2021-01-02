@@ -20,7 +20,7 @@
 #
 ##########
 
-# Default preset (edit)
+# Default Preset (edit)
 ########################################################################### \/
 
 If (!(Get-PSDrive HKU -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKU -PSProvider Registry -Root HKEY_USERS | Out-Null }
@@ -29,16 +29,18 @@ If (!(Get-PSDrive HKCU -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKCU 
 If (!(Get-PSDrive HKCR -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT | Out-Null }
 If (!(Get-PSDrive HKLM -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKLM -PSProvider Registry -Root HKEY_LOCAL_MACHINE | Out-Null }
 
-$tweaks = @(
+$Tweaks = @(
 	### Require Administrator Privileges ###
 	"RequireAdmin",
 	"CreateRestorePoint",
 	
 
-	### Chris Titus Tech Additions
+	### Chris Titus Tech Additions ###
 	"TitusRegistryTweaks", # IS OPTIONAL
 	"InstallTitusProgs", # IS REQUIRED
-    # "InstallChrome",
+
+	### Install via Chocolatey ###
+	# "InstallChrome",
 	# "InstallBrave",
     # "Install7Zip",
 	# "InstallNotepadplusplus",
@@ -73,7 +75,7 @@ $tweaks = @(
 	"DisableFeedback",              # "EnableFeedback",
 	"DisableTailoredExperiences",   # "EnableTailoredExperiences",
 	"DisableAdvertisingID",         # "EnableAdvertisingID",
-	"DisableCortana",               # "EnableCortana",
+	# "DisableCortana",               # "EnableCortana",				#!!!
 	"DisableErrorReporting",        # "EnableErrorReporting",
 	"SetP2PUpdateLocal",            # "SetP2PUpdateInternet",
 	"DisableDiagTrack",             # "EnableDiagTrack",
@@ -91,9 +93,9 @@ $tweaks = @(
 	"SetUnknownNetworksPrivate",    # "SetUnknownNetworksPublic",
 	"DisableNetDevicesAutoInst",    # "EnableNetDevicesAutoInst",
 	"DisableCtrldFolderAccess",	    # "EnableCtrldFolderAccess",
-	"EnableFirewall",
-	"EnableDefender",
-	"EnableDefenderCloud",
+	# "EnableFirewall",					#!!!
+	# "EnableDefender",					#!!!
+	# "EnableDefenderCloud",		  	#!!!
 	"EnableF8BootMenu",             # "DisableF8BootMenu",
 	# "SetDEPOptOut",                 # "SetDEPOptIn",
 	# "EnableCIMemoryIntegrity",      # "DisableCIMemoryIntegrity",
@@ -107,7 +109,7 @@ $tweaks = @(
 	"DisableUpdateDriver",          # "EnableUpdateDriver",
 	"DisableUpdateRestart",         # "EnableUpdateRestart",
 	"DisableHomeGroups",            # "EnableHomeGroups",
-	# "DisableSharedExperiences",     # "EnableSharedExperiences",
+	# "DisableSharedExperiences",     # "EnableSharedExperiences",		#!!!
 	"DisableRemoteAssistance",      # "EnableRemoteAssistance",
 	"EnableRemoteDesktop",          # "DisableRemoteDesktop",
 	"DisableAutoplay",              # "EnableAutoplay",
@@ -179,7 +181,7 @@ $tweaks = @(
 	# "UninstallMsftBloat",           # "InstallMsftBloat",
 	# "UninstallThirdPartyBloat",     # "InstallThirdPartyBloat",
 	# "UninstallWindowsStore",        # "InstallWindowsStore",
-	"DisableXboxFeatures",          # "EnableXboxFeatures",
+	# "DisableXboxFeatures",          # "EnableXboxFeatures",			#!!!
 	"DisableAdobeFlash",            # "EnableAdobeFlash",
     "UninstallLegacyComponents",    # "UninstallLegacyComponents",
     "UninstallMediaPlayer",         # "InstallMediaPlayer",
@@ -960,10 +962,7 @@ Function DisableDefender {
 	If ([System.Environment]::OSVersion.Version.Build -eq 14393) {
 		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "WindowsDefender" -ErrorAction SilentlyContinue
 	} 
-    ElseIf ([System.Environment]::OSVersion.Version.Build -eq 15063) {
-		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "SecurityHealth" -ErrorAction SilentlyContinue
-	}
-    ElseIf ([System.Environment]::OSVersion.Version.Build -ge 19042) {
+    ElseIf ([System.Environment]::OSVersion.Version.Build -ge 15063) {
 		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "SecurityHealth" -ErrorAction SilentlyContinue
 	}
 }
@@ -2364,11 +2363,11 @@ Function UninstallOneDrive {
 	Write-Output "Uninstalling OneDrive..."
 	Stop-Process -Name "OneDrive" -ErrorAction SilentlyContinue
 	Start-Sleep -s 2
-	$onedrive = "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe"
-	If (!(Test-Path $onedrive)) {
-		$onedrive = "$env:SYSTEMROOT\System32\OneDriveSetup.exe"
+	$OneDrive = "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe"
+	If (!(Test-Path $OneDrive)) {
+		$OneDrive = "$env:SYSTEMROOT\System32\OneDriveSetup.exe"
 	}
-	Start-Process $onedrive "/uninstall" -NoNewWindow -Wait
+	Start-Process $OneDrive "/uninstall" -NoNewWindow -Wait
 	Start-Sleep -s 2
 	Stop-Process -Name "explorer" -ErrorAction SilentlyContinue
 	Start-Sleep -s 2
@@ -2386,11 +2385,11 @@ Function UninstallOneDrive {
 # Install OneDrive - Not applicable to Server
 Function InstallOneDrive {
 	Write-Output "Installing OneDrive..."
-	$onedrive = "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe"
-	If (!(Test-Path $onedrive)) {
-		$onedrive = "$env:SYSTEMROOT\System32\OneDriveSetup.exe"
+	$OneDrive = "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe"
+	If (!(Test-Path $OneDrive)) {
+		$OneDrive = "$env:SYSTEMROOT\System32\OneDriveSetup.exe"
 	}
-	Start-Process $onedrive -NoNewWindow
+	Start-Process $OneDrive -NoNewWindow
 }
 
 #---
@@ -2591,7 +2590,9 @@ Function DisableXboxFeatures {
 	Get-AppxPackage "Microsoft.XboxSpeechToTextOverlay" | Remove-AppxPackage -ErrorAction SilentlyContinue
     # xbox game bar plugin
 	Get-AppxPackage "Microsoft.XboxGameOverlay" | Remove-AppxPackage -ErrorAction SilentlyContinue
-    # xbox live in-game experience
+	# xbox game bar
+	Get-AppxPackage "Microsoft.XboxGamingOverlay" | Remove-AppxPackage -ErrorAction SilentlyContinue
+	# xbox live in-game experience
 	Get-AppxPackage "Microsoft.Xbox.TCUI" | Remove-AppxPackage -ErrorAction SilentlyContinue
     # xbox feedback
     Get-AppxPackage "Microsoft.XboxGameCallableUI" | Remove-AppxPackage -ErrorAction SilentlyContinue
@@ -3118,7 +3119,7 @@ Function CreateRestorePoint {
 
 
 ##########
-# Parse parameters and apply tweaks
+# Parse parameters and apply Tweaks
 ##########
 
 # Normalize path to preset file
@@ -3131,13 +3132,13 @@ If ($args -And $args[0].ToLower() -eq "-preset") {
 
 # Load function names from command line arguments or a preset file
 If ($args) {
-	$tweaks = $args
+	$Tweaks = $args
 	If ($preset) {
-	    $tweaks = Get-Content $preset -ErrorAction Stop | 
+	    $Tweaks = Get-Content $preset -ErrorAction Stop | 
             ForEach { $_.Trim() } | 
                 Where { $_ -ne "" -and $_[0] -ne "#" }
 	}
 }
 
 # Call the desired tweak functions
-$tweaks | ForEach { Invoke-Expression $_ }
+$Tweaks | ForEach { Invoke-Expression $_ }

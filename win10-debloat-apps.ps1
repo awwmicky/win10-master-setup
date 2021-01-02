@@ -45,12 +45,12 @@ Function ShowSoftwareAppList {
     Write-Host "Showing Software Applications List..."
     
     Get-ItemProperty "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*" | 
-        Where-Object {$_.DisplayName -ne $null -and $_.SystemComponent -ne "1"} |
+        Where-Object {($null -ne $_.DisplayName) -and ($_.SystemComponent -ne "1")} |
             Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | 
                 Format-Table -AutoSize
 
     Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | 
-        Where-Object {$_.DisplayName -ne $null -and $_.SystemComponent -ne "1"} |
+        Where-Object {($null -ne $_.DisplayName) -and ($_.SystemComponent -ne "1")} |
             Select-Object DisplayName, DisplayVersion, Publisher, InstallDate |
                 Format-Table -AutoSize
 }
@@ -101,7 +101,6 @@ Function UninstallMsftBloat {
         # "Microsoft.ZuneVideo"
 
         # "Microsoft.MicrosoftEdge"
-        # "Microsoft.549981C3F5F10" # Cortana
     )
 
     ForEach ($MsftApp in $MsftAppsList) {
@@ -305,12 +304,8 @@ $Tweaks | ForEach { Invoke-Expression $_ }
 # Microsoft.Windows.ContentDeliveryManager
 
 #Xbox
-#... Get-AppxPackage *Microsoft.Xbox.TCUI* | Remove-AppxPackage               # xbox live in-game experience
+
 ##- Get-AppxPackage *Microsoft.XboxGameCallableUI* | Remove-AppxPackage    # xbox feedback
-# Get-AppxPackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage         # xbox game bar plugin
-#- Get-AppxPackage *Microsoft.XboxGamingOverlay* | Remove-AppxPackage      # xbox game bar
-# Get-appxpackage *Microsoft.XboxSpeechToTextOverlay* | Remove-AppxPackage # xbox game speech window
-# Get-appxpackage *Microsoft.XboxIdentityProvider* | Remove-AppxPackage    # xbox identity provider
 #- Get-AppxPackage *XboxOneSmartGlass* | Remove-AppxPackage                # xbox one smartglass
 
 #remove xbox game bar
