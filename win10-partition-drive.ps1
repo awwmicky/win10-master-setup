@@ -2,9 +2,8 @@
 
 <#
 > add feature
-- customize folder icon
-- quick auto for D: & E:
-- create utility shortcuts (E:\- general\shortcuts)
+- file explorer: add to nav pane
+- sendto: add to context menu
 
 > drives
 - E:\-generals\utilities:
@@ -14,10 +13,11 @@
 
 ###
 
+Clear-Host
 $Tweaks = @(
-    #"PromptNewDrive",
-    #"Drives_D_And_E",
-    #"UpdateDriveIcons",
+    "PromptNewDrive"
+    #"Drives_D_And_E"
+    #"UpdateDriveIcons"
     #"CreateDriveFolders"
 )
 
@@ -82,7 +82,7 @@ Function InputNewDrive {
     'n' { Break }
     'q' { Exit  }
     }
-    } until ($Selection -match "y" -or $selection -match "t" -or $selection -match "n" -or $selection -match "q")
+    } Until (($Selection -match "[YTNQ]") -and ($Selection.Length -eq 1))
 }
 
 Function CreateNewDrive {
@@ -101,7 +101,7 @@ Function CreateNewDrive {
     )
 
     $Space = [math]::Round(($Size / 1GB),1)
-    Write-Host "================ Creating Drive: $Name ($Letter :) - $Space GB... ================"
+    Write-Host "================ Creating Drive: $Name ($Letter :) - $Space GB ... ================"
     
     $Main = [Char]"C"
     Get-Volume -DriveLetter $Main
@@ -109,12 +109,12 @@ Function CreateNewDrive {
     $MainDriveSize = (Get-Partition -DriveLetter $Main).Size
     $DiffSize = $MainDriveSize - $Size
     Write-Host "$Letter - $DiffSize"
-    # Resize-Partition -DriveLetter $Main -Size $DiffSize
+    Resize-Partition -DriveLetter $Main -Size $DiffSize
 
-    # Stop-Service -Name ShellHWDetection
-    # New-Partition -DiskNumber 0 -UseMaximumSize -DriveLetter $Letter 
-    # Format-Volume -DriveLetter $Letter -FileSystem "NTFS" -NewFileSystemLabel $Name -Full -Force
-    # Start-Service -Name ShellHWDetection
+    Stop-Service -Name ShellHWDetection
+    New-Partition -DiskNumber 0 -UseMaximumSize -DriveLetter $Letter 
+    Format-Volume -DriveLetter $Letter -FileSystem "NTFS" -NewFileSystemLabel $Name -Full -Force
+    Start-Service -Name ShellHWDetection
  
     Get-Volume -DriveLetter $Main,$Letter
 }
@@ -150,24 +150,39 @@ Function UpdateDriveIcon {
     }
 }
 
-Function CreateDriveFolders {
-    #Clear-Host
+Function NewDirectories {
+    Param( [String] $Dir, [Object[]] $FoldersList )
 
-    Function NewDirectories {
-        Param( [String] $Dir, [Object[]] $FoldersList )
+    Write-Host "Creating ($Dir) New Directories (Folders)..."
 
-        Write-Host "Creating ($Dir) New Directories (Folders)..."
+    If (Test-Path $Dir) {
+        ForEach ($Folder in $FoldersList) { 
+            $Path = "$Dir\$Folder"
+            If (!(Test-Path $Path)) { New-Item -Path $Path -ItemType "Directory" | Out-Null }
+        }
+    }
+}
 
-        If (Test-Path $Dir) {
-            ForEach ($Folder in $FoldersList) { 
-                $Path = "$Dir\$Folder"
-                If (!(Test-Path $Path)) { New-Item -Path $Path -ItemType "Directory" | Out-Null }
+Function NewShortcuts {
+    Param( [String] $Dir, [Object[]] $ShortcutsList )
+
+    Write-Host "Creating ($Dir) New Shortcuts (Folders)..."
+
+    If (Test-Path "$Dir") {
+        ForEach ($Shortcut in $ShortcutsList) {
+            $Path = "$Dir\$($Shortcut.Name)"
+            If (!(Test-Path $Path)) { 
+                $Location = "$Path" + ".lnk"
+                $WScriptShell = New-Object -ComObject WScript.Shell
+                $Shortcuts = $WScriptShell.CreateShortcut($Location)
+                $Shortcuts.TargetPath = $Shortcut.Path
+                $Shortcuts.Save()
             }
         }
     }
+}
 
-    ###
-    
+Function CreateDriveFolders {
     $FoldersD = @("- boilerplate", "Challenge", "In-Development", "In-Production", "Learning", "Projects", "Practice", "Testing")
     $FoldersD_Boilerplates = @("client-side", "full-stack_MERN", "server-side")
     $DriveD = "D:"
@@ -175,7 +190,7 @@ Function CreateDriveFolders {
     NewDirectories -Dir "$DriveD" -FoldersList $FoldersD
     NewDirectories -Dir "$DriveD\-boilerplate" -FoldersList $FoldersD_Boilerplates
     
-#    Get-ChildItem -Path "$DriveD" –Recurse -Directory
+#    Get-ChildItem -Path "$DriveD" -Recurse -Directory
 
     #---#
 
@@ -187,26 +202,16 @@ Function CreateDriveFolders {
         @{ Name="Wallpaper"; Path="$Env:WINDIR\Web"; },
         @{ Name="SendTo"; Path="$Env:APPDATA\Microsoft\Windows\SendTo"; },
         @{ Name="Startup"; Path="$Env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"; }
+        @{ Name="Recent Items"; Path="$Env:APPDATA\Microsoft\Windows\Recent Items"; },
+        @{ Name="WinX"; Path="$Env:LOCALAPPDATA\Microsoft\Windows\WinX"; }
     )
     $DriveE = "E:"
 
     NewDirectories -Dir "$DriveE" -FoldersList $FoldersE
     NewDirectories -Dir "$DriveE\- general" -FoldersList $FoldersE_Generals
+    NewShortcuts -Dir "$DriveE\- general\shortcuts" -ShortcutsList $FoldersE_Shortcuts
 
-    If (Test-Path "$DriveE\- general\shortcuts"){
-        ForEach ($Folder in $FoldersE_Shortcuts) {
-            $Path = "$DriveE\- general\shortcuts\$($Folder.Name)"
-            If (!(Test-Path $Path)) { 
-                $Location = "$Path" + ".lnk"
-                $WScriptShell = New-Object -ComObject WScript.Shell
-                $Shortcut = $WScriptShell.CreateShortcut($Location)
-                $Shortcut.TargetPath = $Folder.Path
-                $Shortcut.Save()
-            }
-        }
-    }
-
-    Get-ChildItem -Path "$DriveE" –Recurse -Directory
+    Get-ChildItem -Path "$DriveE" -Recurse -Directory
 }
 
 ###

@@ -252,10 +252,7 @@ Function DebloatWindowsApps {
 
 #---
 
-Function InstallApp_1 {
-    $App = "microsoft.windowscommunicationsapps"
-	Get-AppxPackage -AllUsers $App | ForEach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"}
-}
+Function InstallApp_1 {}
 
 Function UninstallApp_1 {}
 
@@ -304,9 +301,5 @@ $Tweaks | ForEach { Invoke-Expression $_ }
 # Microsoft.Windows.ContentDeliveryManager
 
 #Xbox
-
 ##- Get-AppxPackage *Microsoft.XboxGameCallableUI* | Remove-AppxPackage    # xbox feedback
 #- Get-AppxPackage *XboxOneSmartGlass* | Remove-AppxPackage                # xbox one smartglass
-
-#remove xbox game bar
-# Get-appxprovisionedpackage �online | where-object {$_.packagename �like "*Microsoft.XboxGamingOverlay*"} | remove-appxprovisionedpackage �online

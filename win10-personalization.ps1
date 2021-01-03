@@ -1,61 +1,13 @@
 <# PERSONALIZATION #>
 
 <#
-> [ ] System
-- [x] background
-  - bg > SELECT: solid color > PICK: metal blue
-- [x] colors
-  - choose your color > SELECT: custom
-    - DARK: default windows mode
-    - DARK: default app mode
-  - show accent colors... > ON: tittle bar and window borders
-- [x] lock screen
-  - bg > SELECT: picture > BROWSE: %WINDIR%\Web\Wallpaper\Windows\img0.jpg
-  - OFF: get fun...lock screen
-- [x] start
-  - OFF: show suggestions...
-  - choose which folders appear on start
-    - ON: file explorer / downloads
-    - OFF: documents / pictures
-- [x] taskbar
-  - ON: use peek to preview...
-  - notification areas
-    - turn system icons...
-      - ON: touch keyboard
-  - DISABLE: people
-
-> [ ] Personalization
-- [x] display
-  - scale & layout > adv. sacling settings > custom scaling > ENTER: 125
-- [x] notifications & actions
-  - quick actions > edit your quick actions
-    - KEEP: bluetooth / battery saver / focus assist / night light / nearby sharing / connect / vpn / settings
-  - notifications
-    - OFF: show...lock screen (2x) / show...windows / suggest...windows / get...windows
-- [~] focus assist
-  - priority only > customize priority list
-  - automatic rules
-    - OFF: during / game / app
-    - ON: show me a summary...
-- [x] power & sleep
-  - screen
-    - on battery: 5 min
-    - when plugged: 10 min
-  - sleep
-      - on battery: 15 min
-      - when plugged: 30 min
-  - more > power option > system settings
-- [x] tablet mode
-  - disable all
-- [x] multitasking
-  - snap windows
-    - DISABLE: show what I can snap into
-    - DISABLE: simultaneously resize...
-  - timeline
-    - DISABLE: show suggestions in your timeline
-- [ ] shared experiences
-  - nearby sharing > ...share & receive... > SELECT: only my devices
-  - save files I receive to > CHANGE: E:\
+> features to add
+- winX menu list
+    - %LocalAppData%\Microsoft\Windows\WinX
+    - add open windows terminal (wt.exe) (regular & admin)
+- notification area
+    - show: network / power / volume / eject safely
+    - show: MiniBin / bluetooth
 #>
 
 If (!(Get-PSDrive HKU -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKU -PSProvider Registry -Root HKEY_USERS | Out-Null }
@@ -67,7 +19,7 @@ If (!(Get-PSDrive HKLM -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKLM 
 ###
 
 $Tweaks = @(
-    "EnableDevMode",
+    "EnableDeveloperMode",
     "EnableWinInsiderProgram",
 
     "SetDesktopWallpaper",
@@ -113,7 +65,7 @@ $Tweaks = @(
 
 ###
 
-Function EnableDevMode {
+Function EnableDeveloperMode {
     Write-Host "Enabling Developer Mode..."
     Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Type DWord -Value 1
 }
@@ -184,25 +136,24 @@ Function DisableStartSuggestions {
 <# FIXIT #>
 Function ChooseStartFolders {
     Write-Host "Choosing Which Folder Appear on Start..."
-    $Path = "HKLM:\SOFTWARE\Microsoft\PolicyManager\default\Start"
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderDocuments" -Type DWord -Value 0
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderDownloads" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderFileExplorer" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderMusic" -Type DWord -Value 0
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderNetwork" -Type DWord -Value 0
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderPersonalFolder" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderPictures" -Type DWord -Value 0
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderSettings" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderVideos" -Type DWord -Value 0
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderDocuments_ProviderSet" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderDownloads_ProviderSet" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderFileExplorer_ProviderSet" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderMusic_ProviderSet" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderNetwork_ProviderSet" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderPersonalFolder_ProviderSet" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderPictures_ProviderSet" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderSettings_ProviderSet" -Type DWord -Value 1
-    Set-ItemProperty -Path $Path -Name "AllowPinnedFolderVideos_ProviderSet" -Type DWord -Value 1
+
+    $ItemsToDisplay = @("explorer", "settings", "personal")
+    $Key = Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount\*windows.data.unifiedtile.startglobalproperties\Current"
+    $Data = $Key.Data[0..19] -Join ","
+    If ($ItemsToDisplay.Length -gt 0) {
+        $Data += ",203,50,10,$($ItemsToDisplay.Length)"
+        If ($ItemsToDisplay -contains "explorer") { $Data += ",5,188,201,168,164,1,36,140,172,3,68,137,133,1,102,160,129,186,203,189,215,168,164,130,1,0" }
+        If ($ItemsToDisplay -contains "settings") { $Data += ",5,134,145,204,147,5,36,170,163,1,68,195,132,1,102,159,247,157,177,135,203,209,172,212,1,0" }
+        If ($ItemsToDisplay -contains "documents") { $Data += ",5,206,171,211,233,2,36,218,244,3,68,195,138,1,102,130,229,139,177,174,253,253,187,60,0" }
+        If ($ItemsToDisplay -contains "downloads") { $Data += ",5,175,230,158,155,14,36,222,147,2,68,213,134,1,102,191,157,135,155,191,143,198,212,55,0" }
+        If ($ItemsToDisplay -contains "music") { $Data += ",5,160,140,172,128,11,36,209,254,1,68,178,152,1,102,170,189,208,225,204,234,223,185,21,0" }
+        If ($ItemsToDisplay -contains "pictures") { $Data += ",5,160,143,252,193,3,36,138,208,3,68,128,153,1,102,176,181,153,220,205,176,151,222,77,0" }
+        If ($ItemsToDisplay -contains "videos") { $Data += ",5,197,203,206,149,4,36,134,251,1,68,244,133,1,102,128,201,206,212,175,217,158,196,181,1,0" }
+        If ($ItemsToDisplay -contains "network") { $Data += ",5,196,130,214,243,15,36,141,16,68,174,133,1,102,139,181,211,233,254,210,237,177,148,1,0" }
+        If ($ItemsToDisplay -contains "personal") { $Data += ",5,202,224,246,165,7,36,202,242,3,68,232,158,1,102,139,173,143,194,249,160,135,212,188,1,0" }
+    }
+    $Data += ",194,60,1,194,70,1,197,90,1,0"
+    Set-ItemProperty -Path $Key.PSPath -Name "Data" -Type Binary -Value $Data.Split(",")
 }
 
 #---

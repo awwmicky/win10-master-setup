@@ -135,7 +135,7 @@ Function Show-Choco-Menu {
         'n' { Break }
         'q' { Exit  }
         }
-    } Until ($Selection -match "[YNQ]" -and $Selection.Length -eq 1)
+    } Until (($Selection -match "[YNQ]") -and ($Selection.Length -eq 1))
 }
 
 
@@ -297,7 +297,7 @@ Function InstallFigma {
     $Link = "https://www.figma.com/"
     Show-Choco-Menu -Link $Link -Title "Figma" -ChocoInstall "figma"
 }
-InstallFigma # FIXIT
+# InstallFigma # FIXIT
 
 Function InstallInkscape {
     $Link = "https://inkscape.org/release/inkscape-1.0.1/"
@@ -354,7 +354,7 @@ Function InstallGitHubCLI {
     Show-Choco-Menu -Link $Link -Title "GitHub CLI" -ChocoInstall "gh"
 }
 
-Function InstallInsomniaCore {
+Function InstallInsomnia {
     $Link = "https://insomnia.rest/download/"
     Show-Choco-Menu -Link $Link -Title "Insomnia" -ChocoInstall "insomnia-rest-api-client"
 }
