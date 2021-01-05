@@ -23,7 +23,7 @@
 # Default Preset (edit)
 ########################################################################### \/
 
-If (!(Get-PSDrive HKU -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKU -PSProvider Registry -Root HKEY_USERS | Out-Null }
+If (!(Get-PSDrive HKU -ErrorAction SilentlyContinue))  { New-PSDrive -Name HKU  -PSProvider Registry -Root HKEY_USERS | Out-Null }
 If (!(Get-PSDrive HKCC -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKCC -PSProvider Registry -Root HKEY_CURRENT_CONFIG | Out-Null }
 If (!(Get-PSDrive HKCU -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKCU -PSProvider Registry -Root HKEY_CURRENT_USER | Out-Null }
 If (!(Get-PSDrive HKCR -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT | Out-Null }
@@ -39,6 +39,7 @@ $Tweaks = @(
 	"TitusRegistryTweaks", # IS OPTIONAL
 	"InstallTitusProgs", # IS REQUIRED
 
+
 	### Install via Chocolatey ###
 	# "InstallChrome",
 	# "InstallBrave",
@@ -51,16 +52,7 @@ $Tweaks = @(
     # "InstallWinTerminal",
     # "InstallPowerToys",
 	# "ChangeDefaultApps",
-	
-	
-	### Prompt Options ###
-	# "PromptWinDefender",
-	# "PromptOneDrive",
-	# "PromptCortana",
-	# "PromptXBox",
-	# "PromptMsftPPS",
-	# "PromptMsftPPX",
-	
+		
 
 	### Privacy Tweaks ###
 	"DisableTelemetry",             # "EnableTelemetry",

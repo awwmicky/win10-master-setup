@@ -423,21 +423,3 @@ Function InstallRobo3T {
 #$Tweaks | ForEach { Invoke-Expression $_ }
 
 ###
-
-<#
-> Microsoft Store App To Install
-- fluent search
-- mytube (youtube)
-- kanban tasker
-- notepad x
-- quick pad
-- pantherbar
-- socialize up
-#>
-
-<#
-> Fonts
-- power font
-- mac type
-- nerd fonts
-#>

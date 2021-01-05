@@ -10,7 +10,7 @@
     - show: MiniBin / bluetooth
 #>
 
-If (!(Get-PSDrive HKU -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKU -PSProvider Registry -Root HKEY_USERS | Out-Null }
+If (!(Get-PSDrive HKU -ErrorAction SilentlyContinue))  { New-PSDrive -Name HKU  -PSProvider Registry -Root HKEY_USERS | Out-Null }
 If (!(Get-PSDrive HKCC -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKCC -PSProvider Registry -Root HKEY_CURRENT_CONFIG | Out-Null }
 If (!(Get-PSDrive HKCU -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKCU -PSProvider Registry -Root HKEY_CURRENT_USER | Out-Null }
 If (!(Get-PSDrive HKCR -ErrorAction SilentlyContinue)) { New-PSDrive -Name HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT | Out-Null }
@@ -340,10 +340,10 @@ Function EnableContextMenuOpts {
     Write-Host "Enabling Context Menu Options..."
     $Path = "HKCR:\Allfilesystemobjects\shellex\ContextMenuHandlers"
     Write-Host "...Adding 'Copy To'"
-    If (!(Test-Path ("$Path\Copy To..."))) { New-Item -Path ("$Pa -Forceth\Copy To...") | Out-Null }
+    If (!(Test-Path ("$Path\Copy To..."))) { New-Item -Path ("$Path\Copy To...") -Force | Out-Null }
     Set-Item -Path ("$Path\Copy To...") -Value "{C2FBB630-2971-11d1-A18C-00C04FD75D13}"
     Write-Host "...Adding 'Move To'"
-    If (!(Test-Path ("$Path\Move To..."))) { New-Item -Path ("$Pa -Forceth\Move To...") | Out-Null }
+    If (!(Test-Path ("$Path\Move To..."))) { New-Item -Path ("$Path\Move To...") -Force | Out-Null }
     Set-Item -Path ("$Path\Move To...") -Value "{C2FBB631-2971-11d1-A18C-00C04FD75D13}" 
 }
 
